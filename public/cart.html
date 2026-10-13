@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>AromaHome — Корзина</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">AromaHome</a>
+            <nav>
+                <a href="catalog.html">Каталог</a>
+                <a href="about.html">О магазине</a>
+                <a href="delivery.html">Доставка</a>
+                <a href="contacts.html">Контакты</a>
+            </nav>
+            <div class="header-actions">
+                <input type="text" class="search-input" placeholder="Поиск свечи">
+                <a href="account.html" class="icon-btn" title="Избранное">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </a>
+                <a href="cart.html" class="icon-btn" title="Корзина">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </a>
+                <a href="login.html" class="login-btn">Войти</a>
+            </div>
+        </div>
+    </header>
+
+    <section>
+        <div class="container">
+            <div class="section-label">Ваш выбор</div>
+            <h1 class="section-title">Корзина</h1>
+            <p class="section-subtitle">Проверьте товары перед оформлением заказа.</p>
+
+            <div class="cart-layout">
+                <!-- Список товаров -->
+                <div class="cart-items" id="cart-items">
+                    <!-- Сюда JS вставит товары -->
+                </div>
+
+                <!-- Итого -->
+                <aside class="cart-summary" id="cart-summary">
+                    <!-- Сюда JS вставит итог -->
+                </aside>
+            </div>
+
+            <!-- Пустая корзина -->
+            <div class="cart-empty" id="cart-empty" style="display:none;">
+                <div class="section-label">Пустая корзина</div>
+                <h2 class="section-title">Ваша корзина пуста</h2>
+                <p class="section-subtitle">Добавьте свечи из каталога, чтобы оформить заказ.</p>
+                <a href="catalog.html" class="btn-primary">Перейти в каталог</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div>
+                <div class="footer-logo">AromaHome</div>
+                <div class="footer-copy">Аромат, который остается с вами</div>
+            </div>
+            <div class="footer-links">
+                <a href="catalog.html">Каталог</a>
+                <a href="about.html">О магазине</a>
+                <a href="delivery.html">Доставка</a>
+                <a href="contacts.html">Контакты</a>
+            </div>
+            <div class="footer-copy">© 2026 AromaHome</div>
+        </div>
+    </footer>
+
+    <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

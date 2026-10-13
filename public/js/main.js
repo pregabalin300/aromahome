@@ -11,25 +11,32 @@ async function loadProducts() {
 
         container.innerHTML = '';
 
-        list.forEach(product => {
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            card.dataset.aroma = product.aroma;
-            card.dataset.wax = product.wax_type;
-            card.dataset.price = product.price;
-            card.dataset.id = product.product_id;
+    list.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.dataset.aroma = product.aroma;
+        card.dataset.wax = product.wax_type;
+        card.dataset.price = product.price;
+        card.dataset.id = product.product_id;
 
-            card.innerHTML = `
-                <div class="product-image">ФОТО</div>
+        card.innerHTML = `
+            <a href="product.html?id=${product.product_id}" style="text-decoration:none; color:inherit;">
+                <div class="product-image">
+                    ${product.image_url 
+                    ? `<img src="images/${product.image_url}" alt="${product.product_name}">` 
+                    : 'ФОТО'}
+                </div>
                 <h3>${product.product_name}</h3>
                 <p class="aroma">${product.aroma} · ${product.stock} шт.</p>
-                <div class="price-row">
-                    <span class="price">${product.price} ₽</span>
-                    <span class="icon-btn">♡</span>
-                </div>
-            `;
-            container.appendChild(card);
-        });
+            </a>
+            <div class="price-row">
+                <span class="price">${product.price} ₽</span>
+                <span class="icon-btn" onclick="event.preventDefault(); event.stopPropagation(); toggleFavoriteFromCatalog(${product.product_id}, this);">♡</span>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+        updateFavoriteIcons();
 
         const countEl = document.getElementById('product-count');
         if (countEl) {
@@ -133,3 +140,29 @@ function initFilters() {
 }
 
 document.addEventListener('DOMContentLoaded', loadProducts);
+
+function toggleFavoriteFromCatalog(productId, el) {
+    let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    const index = favorites.indexOf(productId);
+
+    if (index === -1) {
+        favorites.push(productId);
+        el.textContent = '♥';
+    } else {
+        favorites.splice(index, 1);
+        el.textContent = '♡';
+    }
+
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+}
+
+function updateFavoriteIcons() {
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    document.querySelectorAll('.product-card').forEach(card => {
+        const id = parseInt(card.dataset.id);
+        const icon = card.querySelector('.icon-btn');
+        if (icon && favorites.includes(id)) {
+            icon.textContent = '♥';
+        }
+    });
+}
