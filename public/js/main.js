@@ -20,18 +20,18 @@ async function loadProducts() {
         card.dataset.id = product.product_id;
 
         card.innerHTML = `
-            <a href="product.html?id=${product.product_id}" style="text-decoration:none; color:inherit;">
-                <div class="product-image">
+            <a href="product.html?id=${product.product_id}" class="block no-underline text-inherit">
+                <div class="bg-[#EFE6D9] rounded-lg h-[220px] flex items-center justify-center mb-4 overflow-hidden">
                     ${product.image_url 
-                    ? `<img src="images/${product.image_url}" alt="${product.product_name}">` 
-                    : 'ФОТО'}
+                        ? `<img src="images/${product.image_url}" alt="${product.product_name}" class="w-full h-full object-cover">` 
+                        : '<span class="text-[#B5A99A] text-xs tracking-widest">ФОТО</span>'}
                 </div>
-                <h3>${product.product_name}</h3>
-                <p class="aroma">${product.aroma} · ${product.stock} шт.</p>
+                <h3 class="font-serif text-[17px] text-[#3E2C23] mb-1">${product.product_name}</h3>
+                <p class="text-xs text-[#9B8B7A] mb-2.5">${product.aroma} · ${product.stock} шт.</p>
             </a>
-            <div class="price-row">
-                <span class="price">${product.price} ₽</span>
-                <span class="icon-btn" onclick="event.preventDefault(); event.stopPropagation(); toggleFavoriteFromCatalog(${product.product_id}, this);">♡</span>
+            <div class="flex justify-between items-center">
+                <span class="text-[15px] text-[#3E2C23] font-semibold">${product.price} ₽</span>
+                <button class="text-[#6B5B4F] hover:text-[#C97B5A] transition-colors" onclick="event.preventDefault(); event.stopPropagation(); toggleFavoriteFromCatalog(${product.product_id}, this);">♡</button>
             </div>
         `;
         container.appendChild(card);
@@ -60,14 +60,19 @@ function initFilters() {
         const selectedAromas = [];
         const selectedWaxes = [];
 
-        const aromaGroup = document.querySelectorAll('.filter-group')[0];
-        aromaGroup.querySelectorAll('input:checked').forEach(cb => {
-            selectedAromas.push(cb.parentElement.textContent.trim());
-        });
+        // Находим все чекбоксы внутри фильтров
+        const allCheckboxes = document.querySelectorAll('aside input[type="checkbox"]');
 
-        const waxGroup = document.querySelectorAll('.filter-group')[1];
-        waxGroup.querySelectorAll('input:checked').forEach(cb => {
-            selectedWaxes.push(cb.parentElement.textContent.trim());
+        // Первые 5 — это ароматы, следующие 3 — воск
+        allCheckboxes.forEach((cb, index) => {
+            if (cb.checked) {
+            const label = cb.parentElement.textContent.trim();
+                if (index < 5) {
+                    selectedAromas.push(label);
+                } else {
+                selectedWaxes.push(label);
+                }
+            }
         });
 
         const maxPrice = parseInt(priceRange.value);

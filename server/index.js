@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { getConnection } = require('./db');
+const pool = require('./db');
 
 const app = express();
 const PORT = 3000;
@@ -12,29 +12,24 @@ app.use(express.static('public'));
 
 // API: получить все товары
 app.get('/api/products', async (req, res) => {
-    
     try {
-        const pool = await getConnection();
-        const result = await pool.request().query('SELECT * FROM Products');
-        res.json(result.recordset);
+        const result = await pool.query('SELECT * FROM products');
+        res.json(result.rows);
     } catch (err) {
         console.error('ОШИБКА:', err);
-        res.status(500).json({ error: err.message, stack: err.stack });
+        res.status(500).json({ error: err.message });
     }
 });
 
 // API: получить один товар по id
 app.get('/api/products/:id', async (req, res) => {
     try {
-        const pool = await getConnection();
-        const result = await pool.request()
-            .input('id', req.params.id)
-            .query('SELECT * FROM Products WHERE product_id = @id');
+        const result = await pool.query('SELECT * FROM products WHERE product_id = $1', [req.params.id]);
         
-        if (result.recordset.length === 0) {
+        if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Товар не найден' });
         }
-        res.json(result.recordset[0]);
+        res.json(result.rows[0]);
     } catch (err) {
         console.error(err);
         res.status(500).send('Ошибка сервера');
@@ -43,48 +38,42 @@ app.get('/api/products/:id', async (req, res) => {
 
 // API: создать заказ
 app.post('/api/orders', async (req, res) => {
+    const client = await pool.connect();
     try {
         const { user_id, name, phone, email, address, delivery, payment, comment, total, items } = req.body;
 
-        const pool = await getConnection();
+        await client.query('BEGIN');
 
-        // Создаём заказ (user_id = 1 для примера, пока нет авторизации)
-        const orderResult = await pool.request()
-            .input('userId', req.body.user_id || 1)
-            .input('status', 'new')
-            .input('total', total)
-            .input('address', address)
-            .input('delivery', delivery)
-            .input('payment', payment)
-            .input('comment', comment)
-            .query(`INSERT INTO Orders (user_id, status, total_price, delivery_address, delivery_method, payment_method, comment)
-                    OUTPUT INSERTED.order_id
-                    VALUES (@userId, @status, @total, @address, @delivery, @payment, @comment)`);
+        // Создаём заказ
+        const orderResult = await client.query(
+            `INSERT INTO orders (user_id, status, total_price, delivery_address, delivery_method, payment_method, comment)
+             VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING order_id`,
+            [user_id || 1, 'new', total, address, delivery, payment, comment]
+        );
 
-        const orderId = orderResult.recordset[0].order_id;
+        const orderId = orderResult.rows[0].order_id;
 
-        // Добавляем позиции заказа
+        // Добавляем позиции
         for (const item of items) {
-            const productResult = await pool.request()
-                .input('id', item.id)
-                .query('SELECT price FROM Products WHERE product_id = @id');
-
-            if (productResult.recordset.length > 0) {
-                const price = productResult.recordset[0].price;
-                await pool.request()
-                    .input('orderId', orderId)
-                    .input('productId', item.id)
-                    .input('qty', item.qty)
-                    .input('price', price)
-                    .query(`INSERT INTO OrderItems (order_id, product_id, quantity, price)
-                            VALUES (@orderId, @productId, @qty, @price)`);
+            const productResult = await client.query('SELECT price FROM products WHERE product_id = $1', [item.id]);
+            if (productResult.rows.length > 0) {
+                const price = productResult.rows[0].price;
+                await client.query(
+                    `INSERT INTO order_items (order_id, product_id, quantity, price)
+                     VALUES ($1, $2, $3, $4)`,
+                    [orderId, item.id, item.qty, price]
+                );
             }
         }
 
+        await client.query('COMMIT');
         res.json({ success: true, order_id: orderId });
     } catch (err) {
+        await client.query('ROLLBACK');
         console.error('Ошибка создания заказа:', err);
         res.status(500).json({ error: 'Ошибка сервера' });
+    } finally {
+        client.release();
     }
 });
 
@@ -93,27 +82,18 @@ app.post('/api/register', async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
-        const pool = await getConnection();
-
-        // Проверяем, нет ли уже такого email
-        const existing = await pool.request()
-            .input('email', email)
-            .query('SELECT user_id FROM Users WHERE email = @email');
-
-        if (existing.recordset.length > 0) {
+        const existing = await pool.query('SELECT user_id FROM users WHERE email = $1', [email]);
+        if (existing.rows.length > 0) {
             return res.status(400).json({ error: 'Пользователь с таким email уже существует' });
         }
 
-        // Создаём пользователя (пароль пока без хеширования — для учебного проекта)
-        const result = await pool.request()
-            .input('name', name)
-            .input('email', email)
-            .input('password', password)
-            .query(`INSERT INTO Users (user_name, email, password_hash, role)
-                    OUTPUT INSERTED.user_id, INSERTED.user_name, INSERTED.email
-                    VALUES (@name, @email, @password, 'customer')`);
+        const result = await pool.query(
+            `INSERT INTO users (user_name, email, password_hash, role) 
+             VALUES ($1, $2, $3, 'customer') RETURNING user_id, user_name, email`,
+            [name, email, password]
+        );
 
-        res.json({ success: true, user: result.recordset[0] });
+        res.json({ success: true, user: result.rows[0] });
     } catch (err) {
         console.error('Ошибка регистрации:', err);
         res.status(500).json({ error: 'Ошибка сервера' });
@@ -124,18 +104,16 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/login', async (req, res) => {
     try {
         const { email, password } = req.body;
+        const result = await pool.query(
+            'SELECT user_id, user_name, email, role FROM users WHERE email = $1 AND password_hash = $2',
+            [email, password]
+        );
 
-        const pool = await getConnection();
-        const result = await pool.request()
-            .input('email', email)
-            .input('password', password)
-            .query('SELECT user_id, user_name, email, role FROM Users WHERE email = @email AND password_hash = @password');
-
-        if (result.recordset.length === 0) {
+        if (result.rows.length === 0) {
             return res.status(401).json({ error: 'Неверный email или пароль' });
         }
 
-        res.json({ success: true, user: result.recordset[0] });
+        res.json({ success: true, user: result.rows[0] });
     } catch (err) {
         console.error('Ошибка входа:', err);
         res.status(500).json({ error: 'Ошибка сервера' });
@@ -145,15 +123,12 @@ app.post('/api/login', async (req, res) => {
 // API: получить заказы пользователя
 app.get('/api/orders/user/:userId', async (req, res) => {
     try {
-        const pool = await getConnection();
-        const result = await pool.request()
-            .input('userId', req.params.userId)
-            .query(`SELECT o.order_id, o.status, o.total_price, o.created_at, o.delivery_method
-                    FROM Orders o
-                    WHERE o.user_id = @userId
-                    ORDER BY o.created_at DESC`);
-        
-        res.json(result.recordset);
+        const result = await pool.query(
+            `SELECT order_id, status, total_price, created_at, delivery_method
+             FROM orders WHERE user_id = $1 ORDER BY created_at DESC`,
+            [req.params.userId]
+        );
+        res.json(result.rows);
     } catch (err) {
         console.error('Ошибка получения заказов:', err);
         res.status(500).json({ error: 'Ошибка сервера' });

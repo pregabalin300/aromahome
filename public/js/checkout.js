@@ -3,7 +3,7 @@ async function loadSummary() {
     const summary = document.getElementById('checkout-summary');
 
     if (cart.length === 0) {
-        summary.innerHTML = '<p>Корзина пуста.</p>';
+        summary.innerHTML = '<p class="text-[#9B8B7A]">Корзина пуста.</p>';
         return;
     }
 
@@ -19,7 +19,7 @@ async function loadSummary() {
         const itemTotal = product.price * cartItem.qty;
         total += itemTotal;
         itemsHtml += `
-            <div class="checkout-item">
+            <div class="flex justify-between text-sm text-[#6B5B4F] py-2">
                 <span>${product.product_name} × ${cartItem.qty}</span>
                 <span>${itemTotal} ₽</span>
             </div>
@@ -27,13 +27,13 @@ async function loadSummary() {
     });
 
     summary.innerHTML = `
-        <h3>Ваш заказ</h3>
+        <h3 class="font-serif text-[22px] text-[#3E2C23] mb-5">Ваш заказ</h3>
         ${itemsHtml}
-        <div class="checkout-total">
+        <div class="flex justify-between text-[18px] font-semibold text-[#3E2C23] pt-4 border-t border-[#EFE9E0] mt-4">
             <span>Итого</span>
             <span>${total} ₽</span>
         </div>
-        <button class="btn-confirm" type="submit" form="checkout-form">Подтвердить заказ</button>
+        <button class="w-full py-4 bg-[#4A3728] text-white border-none rounded-md text-[13px] tracking-widest uppercase cursor-pointer mt-5 hover:bg-[#3A2A1E] transition-colors" type="submit" form="checkout-form">Подтвердить заказ</button>
     `;
 }
 
@@ -54,7 +54,6 @@ async function submitOrder(event) {
     const payment = document.querySelector('input[name="payment"]:checked').value;
     const comment = document.getElementById('comment').value.trim();
 
-    // Считаем сумму
     const products = await Promise.all(
         cart.map(item => fetch('/api/products/' + item.id).then(r => r.json()))
     );
@@ -85,20 +84,20 @@ async function submitOrder(event) {
         // Очищаем корзину
         localStorage.removeItem('cart');
 
-        // Показываем сообщение об успехе
-        document.querySelector('.checkout-layout').style.display = 'none';
-        document.querySelector('.section-label').style.display = 'none';
-        document.querySelector('.section-title').style.display = 'none';
-        document.querySelector('.section-subtitle').style.display = 'none';
+        // Прячем форму и показываем успех
+        document.querySelector('.grid.grid-cols-\\[1fr_400px\\]').classList.add('hidden');
+        document.querySelector('.text-\\[11px\\].tracking-\\[1\\.5px\\].text-\\[\\#C97B5A\\]').classList.add('hidden');
+        document.querySelector('h1.font-serif').classList.add('hidden');
+        document.querySelector('p.text-sm.text-\\[\\#6B5B4F\\]').classList.add('hidden');
 
         const success = document.createElement('div');
-        success.className = 'order-success';
+        success.className = 'text-center py-[60px] px-5 bg-white rounded-[10px] border border-[#EFE9E0] mt-[40px]';
         success.innerHTML = `
-            <h2>Заказ успешно оформлен</h2>
-            <p>Мы свяжемся с вами по телефону ${phone} для подтверждения.</p>
-            <a href="catalog.html" class="btn-primary">Вернуться в каталог</a>
+            <h2 class="font-serif text-[32px] text-[#3E2C23] mb-4">Заказ успешно оформлен</h2>
+            <p class="text-[15px] text-[#6B5B4F] mb-6">Мы свяжемся с вами по телефону ${phone} для подтверждения.</p>
+            <a href="catalog.html" class="inline-block px-8 py-3.5 bg-[#4A3728] text-white no-underline rounded-md text-[13px] tracking-[1px] uppercase hover:bg-[#3A2A1E] transition-colors">Вернуться в каталог</a>
         `;
-        document.querySelector('section .container').appendChild(success);
+        document.querySelector('section .max-w-\\[1160px\\]').appendChild(success);
     } catch (error) {
         console.error('Ошибка оформления заказа:', error);
         alert('Не удалось оформить заказ. Попробуйте еще раз.');

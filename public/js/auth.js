@@ -30,7 +30,6 @@ async function registerUser(event) {
             return;
         }
 
-        // Сохраняем пользователя в localStorage
         localStorage.setItem('user', JSON.stringify(data.user));
         window.location.href = 'account.html';
     } catch (error) {
@@ -67,14 +66,16 @@ async function loginUser(event) {
     }
 }
 
-// Обновить шапку: если пользователь вошёл — показать имя вместо "Войти"
+// Функция обновления шапки
 function updateHeader() {
     const user = JSON.parse(localStorage.getItem('user') || 'null');
-    const loginBtn = document.querySelector('.login-btn');
-    if (user && loginBtn) {
-        loginBtn.textContent = user.user_name;
-        loginBtn.href = 'account.html';
+    const loginLink = document.querySelector('.login-link');
+    
+    if (loginLink && user) {
+        loginLink.textContent = user.user_name;
+        loginLink.href = 'account.html';
     }
 }
 
+// Запускаем проверку сразу после загрузки страницы
 document.addEventListener('DOMContentLoaded', updateHeader);

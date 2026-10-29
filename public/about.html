@@ -2,85 +2,87 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AromaHome — О магазине</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/output.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+    </style>
 </head>
-<body>
-    <header>
-        <div class="container">
-            <a href="index.html" class="logo">AromaHome</a>
-            <nav>
-                <a href="catalog.html">Каталог</a>
-                <a href="about.html">О магазине</a>
-                <a href="delivery.html">Доставка</a>
-                <a href="contacts.html">Контакты</a>
+<body class="bg-[#FAF7F2] text-[#3E2C23] antialiased flex flex-col min-h-screen">
+
+    <header class="bg-white border-b border-[#EFE9E0] py-5">
+        <div class="max-w-[1160px] mx-auto px-5 flex items-center justify-between gap-10">
+            <a href="index.html" class="font-serif text-2xl text-[#3E2C23] no-underline tracking-wide">AromaHome</a>
+            <nav class="flex gap-8 flex-1">
+                <a href="catalog.html" class="text-[#6B5B4F] text-sm no-underline hover:text-[#C97B5A] transition-colors">Каталог</a>
+                <a href="about.html" class="text-[#6B5B4F] text-sm no-underline hover:text-[#C97B5A] transition-colors">О магазине</a>
+                <a href="delivery.html" class="text-[#6B5B4F] text-sm no-underline hover:text-[#C97B5A] transition-colors">Доставка</a>
+                <a href="contacts.html" class="text-[#6B5B4F] text-sm no-underline hover:text-[#C97B5A] transition-colors">Контакты</a>
             </nav>
-            <div class="header-actions">
-                <input type="text" class="search-input" placeholder="Поиск свечи">
-                <a href="account.html" class="icon-btn" title="Избранное">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
+            <div class="flex items-center gap-5">
+                <input type="text" placeholder="Поиск свечи" class="px-4 py-2 border border-[#E0D5C5] rounded-full text-[13px] w-[220px] bg-white outline-none placeholder:text-[#B5A99A] focus:border-[#C97B5A] transition-colors">
+                <a href="account.html" class="text-[#6B5B4F] hover:text-[#C97B5A] p-1.5 rounded-md transition-colors" title="Избранное">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                 </a>
-                <a href="cart.html" class="icon-btn" title="Корзина">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
+                <a href="cart.html" class="text-[#6B5B4F] hover:text-[#C97B5A] p-1.5 rounded-md transition-colors" title="Корзина">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                 </a>
-                <a href="login.html" class="login-btn">Войти</a>
+                <a href="login.html" class="text-[#3E2C23] text-sm no-underline">Войти</a>
             </div>
         </div>
     </header>
 
-    <section>
-        <div class="container">
-            <div class="section-label">О бренде</div>
-            <h1 class="section-title">О магазине</h1>
-            <p class="section-subtitle">AromaHome — небольшая мастерская свечей с вниманием к деталям.</p>
+    <main class="flex-grow py-[60px]">
+        <div class="max-w-[1160px] mx-auto px-5">
+            <div class="text-[11px] tracking-[1.5px] text-[#C97B5A] uppercase mb-3">О бренде</div>
+            <h1 class="font-serif text-[36px] text-[#3E2C23] mb-3 font-normal">О магазине</h1>
+            <p class="text-sm text-[#6B5B4F] mb-10">AromaHome — небольшая мастерская свечей с вниманием к деталям.</p>
 
-            <div class="about-layout">
-                <div class="about-image">
-                    <img src="images/workshop.jpg" alt="Мастерская AromaHome">
+            <div class="grid grid-cols-2 gap-[60px] mb-10">
+                <div class="bg-[#D9C7B3] rounded-xl h-[400px] flex items-center justify-center overflow-hidden">
+                    <img src="images/workshop.jpg" alt="Мастерская AromaHome" class="w-full h-full object-cover">
                 </div>
-                <div class="about-text">
-                    <p>Мы создаем свечи вручную: подбираем натуральный воск, тестируем фитили и собираем композиции небольшими партиями.</p>
-                    <p>Каждый аромат задуман как часть повседневного ритуала — утреннего кофе, спокойного вечера или встречи с друзьями.</p>
+                <div class="flex flex-col justify-center">
+                    <p class="text-[16px] text-[#6B5B4F] leading-[1.7] mb-5">Мы создаем свечи вручную: подбираем натуральный воск, тестируем фитили и собираем композиции небольшими партиями.</p>
+                    <p class="text-[16px] text-[#6B5B4F] leading-[1.7]">Каждый аромат задуман как часть повседневного ритуала — утреннего кофе, спокойного вечера или встречи с друзьями.</p>
                 </div>
             </div>
 
-            <div class="about-info">
+            <div class="grid grid-cols-3 gap-10 mt-[60px] pt-10 border-t border-[#EFE9E0]">
                 <div>
-                    <h3>Доставка</h3>
-                    <p>Курьер по городу — от 0 ₽<br>Самовывоз из мастерской — ежедневно<br>Доставка по России — 2–7 дней</p>
+                    <h3 class="font-serif text-[18px] text-[#3E2C23] mb-3">Доставка</h3>
+                    <p class="text-sm text-[#6B5B4F] leading-[1.7]">Курьер по городу — от 0 ₽<br>Самовывоз из мастерской — ежедневно<br>Доставка по России — 2–7 дней</p>
                 </div>
                 <div>
-                    <h3>Контакты</h3>
-                    <p>hello@aromahome.ru<br>+7 900 000-00-00<br>г. Новосибирск</p>
+                    <h3 class="font-serif text-[18px] text-[#3E2C23] mb-3">Контакты</h3>
+                    <p class="text-sm text-[#6B5B4F] leading-[1.7]">hello@aromahome.ru<br>+7 900 000-00-00<br>г. Новосибирск</p>
                 </div>
-                <div class="about-map">
-                    <img src="images/map.jpg" alt="Карта">
+                <div class="bg-[#EFE6D9] rounded-xl h-[140px] flex items-center justify-center overflow-hidden">
+                    <img src="images/map.jpg" alt="Карта" class="w-full h-full object-cover">
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
-    <footer>
-        <div class="container">
+    <footer class="bg-white py-10 border-t border-[#EFE9E0]">
+        <div class="max-w-[1160px] mx-auto px-5 flex justify-between items-center flex-wrap gap-5">
             <div>
-                <div class="footer-logo">AromaHome</div>
-                <div class="footer-copy">Аромат, который остается с вами</div>
+                <div class="font-serif text-xl text-[#3E2C23]">AromaHome</div>
+                <div class="text-xs text-[#B5A99A]">Аромат, который остается с вами</div>
             </div>
-            <div class="footer-links">
-                <a href="catalog.html">Каталог</a>
-                <a href="about.html">О магазине</a>
-                <a href="delivery.html">Доставка</a>
-                <a href="contacts.html">Контакты</a>
+            <div class="flex gap-6 text-[13px] text-[#6B5B4F]">
+                <a href="catalog.html" class="hover:text-[#C97B5A] transition-colors">Каталог</a>
+                <a href="about.html" class="hover:text-[#C97B5A] transition-colors">О магазине</a>
+                <a href="delivery.html" class="hover:text-[#C97B5A] transition-colors">Доставка</a>
+                <a href="contacts.html" class="hover:text-[#C97B5A] transition-colors">Контакты</a>
             </div>
-            <div class="footer-copy">© 2026 AromaHome</div>
+            <div class="text-xs text-[#B5A99A]">© 2026 AromaHome</div>
         </div>
     </footer>
+
     <script src="js/auth.js"></script>
 </body>
 </html>

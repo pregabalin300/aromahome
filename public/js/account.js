@@ -1,11 +1,17 @@
 function showTab(tab, event) {
     if (event) event.preventDefault();
 
-    document.querySelectorAll('.account-tab').forEach(t => t.style.display = 'none');
-    document.getElementById('tab-' + tab).style.display = 'block';
+    document.querySelectorAll('.account-tab').forEach(t => t.classList.add('hidden'));
+    document.getElementById('tab-' + tab).classList.remove('hidden');
 
-    document.querySelectorAll('.account-menu-item').forEach(m => m.classList.remove('active'));
-    if (event && event.target) event.target.classList.add('active');
+    document.querySelectorAll('.account-sidebar a').forEach(m => {
+        m.classList.remove('bg-[#F5F0E8]', 'text-[#3E2C23]', 'font-semibold');
+        m.classList.add('text-[#6B5B4F]');
+    });
+    if (event && event.target) {
+        event.target.classList.add('bg-[#F5F0E8]', 'text-[#3E2C23]', 'font-semibold');
+        event.target.classList.remove('text-[#6B5B4F]');
+    }
 
     if (tab === 'orders') loadOrders();
     if (tab === 'profile') loadProfile();
@@ -17,16 +23,16 @@ function loadProfile() {
     const container = document.getElementById('profile-info');
 
     if (!user) {
-        container.innerHTML = '<p>Вы не авторизованы. <a href="login.html">Войти</a></p>';
+        container.innerHTML = '<p class="text-[#9B8B7A]">Вы не авторизованы. <a href="login.html" class="text-[#C97B5A]">Войти</a></p>';
         return;
     }
 
     container.innerHTML = `
-        <div class="profile-block">
-            <p class="profile-label">Имя</p>
-            <p>${user.user_name}</p>
-            <p class="profile-label">Email</p>
-            <p>${user.email}</p>
+        <div class="bg-[#FAF7F2] p-6 rounded-lg max-w-[400px] border border-[#EFE9E0]">
+            <p class="text-[12px] uppercase tracking-widest text-[#9B8B7A] mb-1">Имя</p>
+            <p class="text-[15px] text-[#3E2C23] mb-4">${user.user_name}</p>
+            <p class="text-[12px] uppercase tracking-widest text-[#9B8B7A] mb-1">Email</p>
+            <p class="text-[15px] text-[#3E2C23]">${user.email}</p>
         </div>
     `;
 }
@@ -36,7 +42,7 @@ async function loadOrders() {
     const user = JSON.parse(localStorage.getItem('user') || 'null');
 
     if (!user) {
-        container.innerHTML = '<p style="color:#9B8B7A;">Войдите в аккаунт, чтобы видеть заказы.</p>';
+        container.innerHTML = '<p class="text-[#9B8B7A]">Войдите в аккаунт, чтобы видеть заказы.</p>';
         return;
     }
 
@@ -45,7 +51,7 @@ async function loadOrders() {
         const orders = await response.json();
 
         if (orders.length === 0) {
-            container.innerHTML = '<p style="color:#9B8B7A;">У вас пока нет заказов.</p>';
+            container.innerHTML = '<p class="text-[#9B8B7A]">У вас пока нет заказов.</p>';
             return;
         }
 
@@ -61,18 +67,18 @@ async function loadOrders() {
             const status = statusMap[order.status] || order.status;
 
             const row = document.createElement('div');
-            row.className = 'order-row';
+            row.className = 'grid grid-cols-[100px_150px_1fr_auto] gap-5 items-center p-4 bg-[#FAF7F2] rounded-lg border border-[#EFE9E0] mb-3 text-sm text-[#6B5B4F]';
             row.innerHTML = `
-                <div><strong>№ ${order.order_id}</strong></div>
+                <div><strong class="text-[#3E2C23]">№ ${order.order_id}</strong></div>
                 <div>${date}</div>
                 <div>${order.delivery_method || 'Курьер'}</div>
-                <div class="order-status">${status} · ${order.total_price} ₽</div>
+                <div class="text-[#7A8B6F] font-semibold">${status} · ${order.total_price} ₽</div>
             `;
             container.appendChild(row);
         });
     } catch (error) {
         console.error(error);
-        container.innerHTML = '<p>Не удалось загрузить заказы.</p>';
+        container.innerHTML = '<p class="text-red-500">Не удалось загрузить заказы.</p>';
     }
 }
 
@@ -81,7 +87,7 @@ async function loadFavorites() {
     const container = document.getElementById('favorites-list');
 
     if (favorites.length === 0) {
-        container.innerHTML = '<p style="color:#9B8B7A;">Вы ещё ничего не добавили в избранное.</p>';
+        container.innerHTML = '<p class="text-[#9B8B7A] col-span-3">Вы ещё ничего не добавили в избранное.</p>';
         return;
     }
 
@@ -92,20 +98,20 @@ async function loadFavorites() {
     container.innerHTML = '';
     products.forEach(product => {
         const card = document.createElement('div');
-        card.className = 'product-card';
+        card.className = 'bg-transparent cursor-pointer';
         card.innerHTML = `
-            <a href="product.html?id=${product.product_id}" style="text-decoration:none; color:inherit;">
-                <div class="product-image">
+            <a href="product.html?id=${product.product_id}" class="block no-underline text-inherit">
+                <div class="bg-[#EFE6D9] rounded-lg h-[220px] flex items-center justify-center mb-4 overflow-hidden">
                     ${product.image_url 
-                        ? `<img src="images/${product.image_url}" alt="${product.product_name}">` 
-                        : 'ФОТО'}
+                        ? `<img src="images/${product.image_url}" alt="${product.product_name}" class="w-full h-full object-cover">` 
+                        : '<span class="text-[#B5A99A] text-xs tracking-widest">ФОТО</span>'}
                 </div>
-                <h3>${product.product_name}</h3>
-                <p class="aroma">${product.aroma}</p>
+                <h3 class="font-serif text-[17px] text-[#3E2C23] mb-1">${product.product_name}</h3>
+                <p class="text-xs text-[#9B8B7A] mb-2.5">${product.aroma}</p>
             </a>
-            <div class="price-row">
-                <span class="price">${product.price} ₽</span>
-                <span class="icon-btn">♥</span>
+            <div class="flex justify-between items-center">
+                <span class="text-[15px] text-[#3E2C23] font-semibold">${product.price} ₽</span>
+                <span class="text-[#C97B5A] text-lg">♥</span>
             </div>
         `;
         container.appendChild(card);
@@ -114,15 +120,13 @@ async function loadFavorites() {
 
 function logout(event) {
     if (event) event.preventDefault();
-
-    // Создаём окно подтверждения
     const confirmed = confirm('Вы точно хотите выйти из аккаунта?');
-
     if (confirmed) {
         localStorage.removeItem('user');
         window.location.href = 'index.html';
     }
 }
+
 document.addEventListener('DOMContentLoaded', () => {
     loadProfile();
 });

@@ -19,30 +19,31 @@ async function loadProduct() {
         const heartIcon = isFavorite ? '♥' : '♡';
 
         document.getElementById('product-detail').innerHTML = `
-            <div class="product-detail-image">
+            <div class="bg-[#EFE6D9] rounded-xl h-[480px] flex items-center justify-center overflow-hidden">
                 ${product.image_url 
-                    ? `<img src="images/${product.image_url}" alt="${product.product_name}">` 
-                    : 'ФОТО ТОВАРА'}
+                    ? `<img src="images/${product.image_url}" alt="${product.product_name}" class="w-full h-full object-cover">` 
+                    : '<span class="text-[#B5A99A] text-sm tracking-widest">ФОТО ТОВАРА</span>'}
             </div>
-            <div class="product-detail-info">
-                <h1>${product.product_name}</h1>
-                <div class="product-detail-aroma">${product.aroma} · ${product.wax_type} воск · ${product.stock} шт.</div>
-                <div class="product-detail-price">${product.price} ₽</div>
-                <div class="product-detail-desc">${product.description || 'Описание скоро появится.'}</div>
+            
+            <div>
+                <h1 class="font-serif text-[36px] text-[#3E2C23] mb-2">${product.product_name}</h1>
+                <div class="text-sm text-[#9B8B7A] mb-5">${product.aroma} · ${product.wax_type} воск · ${product.stock} шт.</div>
+                <div class="text-[28px] font-semibold text-[#3E2C23] mb-6">${product.price} ₽</div>
+                <div class="text-[15px] text-[#6B5B4F] leading-relaxed mb-8">${product.description || 'Описание скоро появится.'}</div>
 
-                <div class="quantity-block">
-                    <div class="quantity-label">Количество</div>
-                    <div class="quantity-control">
-                        <button onclick="changeQty(-1)">−</button>
-                        <span id="qty">1</span>
-                        <button onclick="changeQty(1)">+</button>
+                <div class="mb-8">
+                    <div class="text-xs tracking-widest uppercase text-[#9B8B7A] mb-3">Количество</div>
+                    <div class="inline-flex items-center border border-[#E0D5C5] rounded-md overflow-hidden">
+                        <button onclick="changeQty(-1)" class="w-10 h-10 bg-white border-none text-[18px] cursor-pointer hover:bg-[#F5F0E8]">−</button>
+                        <span id="qty" class="w-[50px] text-center text-[15px]">1</span>
+                        <button onclick="changeQty(1)" class="w-10 h-10 bg-white border-none text-[18px] cursor-pointer hover:bg-[#F5F0E8]">+</button>
                     </div>
                 </div>
 
-                <div class="product-actions">
-                    <button class="btn-cart" onclick="addToCart(${product.product_id})">Добавить в корзину</button>
-                    <button class="btn-favorite" id="fav-btn" onclick="toggleFavorite(${product.product_id})">
-                        <span id="fav-icon">${heartIcon}</span> В избранное
+                <div class="flex items-center gap-5">
+                    <button class="px-10 py-3.5 bg-[#4A3728] text-white rounded-md text-[13px] tracking-widest uppercase cursor-pointer hover:bg-[#3A2A1E] transition-colors" onclick="addToCart(${product.product_id})">Добавить в корзину</button>
+                    <button class="bg-transparent border-none text-sm text-[#6B5B4F] cursor-pointer flex items-center gap-1.5 hover:text-[#C97B5A] transition-colors" id="fav-btn" onclick="toggleFavorite(${product.product_id})">
+                        <span id="fav-icon" class="text-[16px]">${heartIcon}</span> В избранное
                     </button>
                 </div>
             </div>

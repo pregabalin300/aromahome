@@ -1,25 +1,9 @@
 require('dotenv').config();
-const sql = require('mssql');
+const { Pool } = require('pg');
 
-const config = {
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    server: process.env.DB_SERVER,
-    port: parseInt(process.env.DB_PORT),
-    database: process.env.DB_NAME,
-    options: {
-        encrypt: false,
-        trustServerCertificate: true
-    }
-};
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+});
 
-async function getConnection() {
-    try {
-        const pool = await sql.connect(config);
-        return pool;
-    } catch (err) {
-        console.error('Ошибка подключения к базе:', err);
-    }
-}
-
-module.exports = { getConnection, sql };
+module.exports = pool;
