@@ -135,6 +135,12 @@ app.get('/api/orders/user/:userId', async (req, res) => {
     }
 });
 
+// Запрет индексации API
+app.use('/api', (req, res, next) => {
+    res.set('X-Robots-Tag', 'noindex, nofollow');
+    next();
+});
+
 app.listen(PORT, () => {
     console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
