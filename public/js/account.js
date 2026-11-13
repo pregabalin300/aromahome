@@ -103,7 +103,7 @@ async function loadFavorites() {
             <a href="product.html?id=${product.product_id}" class="block no-underline text-inherit">
                 <div class="bg-[#EFE6D9] rounded-lg h-[220px] flex items-center justify-center mb-4 overflow-hidden">
                     ${product.image_url 
-                        ? `<img src="images/${product.image_url}" alt="${product.product_name}" class="w-full h-full object-cover">` 
+                        ? `<img src="${product.image_url}" alt="${product.product_name}" class="w-full h-full object-cover">` 
                         : '<span class="text-[#B5A99A] text-xs tracking-widest">ФОТО</span>'}
                 </div>
                 <h3 class="font-serif text-[17px] text-[#3E2C23] mb-1">${product.product_name}</h3>

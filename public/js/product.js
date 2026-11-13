@@ -21,7 +21,7 @@ async function loadProduct() {
         document.getElementById('product-detail').innerHTML = `
             <div class="bg-[#EFE6D9] rounded-xl h-[480px] flex items-center justify-center overflow-hidden">
                 ${product.image_url 
-                    ? `<img src="images/${product.image_url}" alt="${product.product_name}" class="w-full h-full object-cover">` 
+                    ? `<img src="${product.image_url}" alt="${product.product_name}" class="w-full h-full object-cover">` 
                     : '<span class="text-[#B5A99A] text-sm tracking-widest">ФОТО ТОВАРА</span>'}
             </div>
             

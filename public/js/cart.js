@@ -33,7 +33,7 @@ async function loadCart() {
         div.innerHTML = `
             <div class="w-[100px] h-[100px] bg-[#EFE6D9] rounded-lg flex items-center justify-center overflow-hidden">
                 ${product.image_url 
-                    ? `<img src="images/${product.image_url}" alt="${product.product_name}" class="w-full h-full object-cover">` 
+                    ? `<img src="${product.image_url}" alt="${product.product_name}" class="w-full h-full object-cover">` 
                     : '<span class="text-[#B5A99A] text-[11px]">ФОТО</span>'}
             </div>
             <div>
